@@ -1,0 +1,40 @@
+language: node_js
+node_js:
+- 11.12.0
+
+cache: npm
+
+branches:
+  only:
+  - master
+  - develop
+
+before_install:
+- source .travis.variables.sh
+- npm i -g npm@6.7.0
+
+install:
+- npm ci
+
+script:
+- npm run build
+
+deploy:
+  provider: s3
+  edge:
+    source: travis-ci/dpl
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY_ID # Travis config
+  secret_access_key: $AWS_SECRET_ACCESS_KEY # Travis config
+  bucket: $DEPLOYMENT_S3_BUCKET # Variables script
+  skip_cleanup: true
+  acl: public_read
+  region: eu-central-1
+  local_dir: dist
+  default_text_charset: 'utf-8'
+  cache_control:
+    - "no-cache: *.html"
+    - "public, max-age=31536000, immutable: *"
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^develop|master$
