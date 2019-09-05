@@ -15,7 +15,7 @@ if [ "$TRAVIS_BRANCH" = "master" ]
     echo "Running PRODUCTION build"
 
     export ENV=production
-    export API_FETCH_REPOSITORIES_URL=https://ljq66i6ig8.execute-api.eu-central-1.amazonaws.com/production/github/repositories
-    export API_ANALYZE_URL=https://ljq66i6ig8.execute-api.eu-central-1.amazonaws.com/production/github/analyze
+    export API_FETCH_REPOSITORIES_URL=https://qt4uy4o2ri.execute-api.eu-central-1.amazonaws.com/production/github/repositories
+    export API_ANALYZE_URL=https://qt4uy4o2ri.execute-api.eu-central-1.amazonaws.com/production/github/analyze
     export DEPLOYMENT_S3_BUCKET=github-stats.homeday.dev
 fi
