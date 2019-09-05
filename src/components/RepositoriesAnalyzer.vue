@@ -2,13 +2,26 @@
   <div class="repositories-analyzer">
     <div class="repositories-analyzer__controls">
       <v-row>
-        <v-col cols="12" class="text-center mb-4">
+        <v-col cols="12" class="text-center mb-2">
           <v-btn
             text
             @click="goBack"
           >
             <v-icon left>mdi-backup-restore</v-icon>
             Back to repositories
+          </v-btn>
+        </v-col>
+        <v-col cols="12" class="text-center">
+          <v-btn
+            v-for="predefinedRange in predefinedRanges"
+            :key="predefinedRange.value"
+            class="ma-2"
+            small
+            outlined
+            color="pink lighten-2"
+            @click="setRange(predefinedRange.value)"
+          >
+            {{ predefinedRange.name }}
           </v-btn>
         </v-col>
         <v-col cols="12" sm="6">
@@ -88,6 +101,14 @@
 
 <script>
 import { mapState } from 'vuex';
+import dateStartOfQuarter from 'date-fns/startOfQuarter';
+import dateEndOfQuarter from 'date-fns/endOfQuarter';
+import dateSubQuarters from 'date-fns/subQuarters';
+import dateStartOfMonth from 'date-fns/startOfMonth';
+import dateEndOfMonth from 'date-fns/endOfMonth';
+import dateSubMonths from 'date-fns/subMonths';
+import dateSubDays from 'date-fns/subDays';
+import dateLightFormat from 'date-fns/lightFormat';
 import AuthService from '@/auth/authService';
 import RepositoriesResult from '@/components/RepositoriesResult.vue';
 
@@ -108,6 +129,28 @@ export default {
       dateFrom: null,
       dateToOpen: false,
       dateTo: null,
+      predefinedRanges: [
+        {
+          name: 'This quarter',
+          value: 'this-quarter',
+        },
+        {
+          name: 'Previous quarter',
+          value: 'previous-quarter',
+        },
+        {
+          name: 'This month',
+          value: 'this-month',
+        },
+        {
+          name: 'Previous month',
+          value: 'previous-month',
+        },
+        {
+          name: 'Last 30 days',
+          value: 'last-30-days',
+        },
+      ],
     };
   },
   computed: {
@@ -115,6 +158,9 @@ export default {
       repositories: 'repositories',
       analyses: 'analyses',
     }),
+  },
+  created() {
+    this.setRange('this-quarter');
   },
   methods: {
     goBack() {
@@ -149,6 +195,57 @@ export default {
           },
         );
       });
+    },
+    formatDate(date) {
+      return dateLightFormat(date, 'yyyy-MM-dd');
+    },
+    setRange(range) {
+      const now = new Date();
+      const nowInPreviousQuarter = dateSubQuarters(now, 1);
+      const nowInPreviousMonth = dateSubMonths(now, 1);
+
+      switch (range) {
+        case ('this-quarter'):
+          this.dateFrom = this.formatDate(
+            dateStartOfQuarter(now),
+          );
+          this.dateTo = this.formatDate(
+            dateEndOfQuarter(now),
+          );
+          break;
+        case ('previous-quarter'):
+          this.dateFrom = this.formatDate(
+            dateStartOfQuarter(nowInPreviousQuarter),
+          );
+          this.dateTo = this.formatDate(
+            dateEndOfQuarter(nowInPreviousQuarter),
+          );
+          break;
+        case ('this-month'):
+          this.dateFrom = this.formatDate(
+            dateStartOfMonth(now),
+          );
+          this.dateTo = this.formatDate(
+            dateEndOfMonth(now),
+          );
+          break;
+        case ('previous-month'):
+          this.dateFrom = this.formatDate(
+            dateStartOfMonth(nowInPreviousMonth),
+          );
+          this.dateTo = this.formatDate(
+            dateEndOfMonth(nowInPreviousMonth),
+          );
+          break;
+        case ('last-30-days'):
+          this.dateFrom = this.formatDate(
+            dateSubDays(now, 30),
+          );
+          this.dateTo = this.formatDate(now);
+          break;
+        default:
+          break;
+      }
     },
   },
 };
