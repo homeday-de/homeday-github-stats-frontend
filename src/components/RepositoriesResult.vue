@@ -5,10 +5,10 @@
         <v-col
           v-for="analysis in analyses"
           :key="analysis.repo"
+          :lg="largeScreenColumn"
           cols="12"
           sm="6"
           md="4"
-          lg="3"
         >
           <v-card
             color="blue-grey darken-4"
@@ -88,6 +88,17 @@ export default {
       }
 
       return !this.analyses.some(analysis => analysis.inProgress === true);
+    },
+    largeScreenColumn() {
+      if (this.analyses.length < 3) {
+        return 6;
+      }
+
+      if (this.analyses.length === 3) {
+        return 4;
+      }
+
+      return 3;
     },
   },
 };
