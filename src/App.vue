@@ -110,7 +110,9 @@ export default {
     async logOut() {
       const auth0 = await AuthService.getInstance();
 
-      auth0.logout();
+      auth0.logout({
+        returnTo: `${window.location.protocol}//${window.location.host}`,
+      });
     },
   },
 };
