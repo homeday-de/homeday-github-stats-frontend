@@ -1,4 +1,5 @@
 import { stringify as queryStringify } from 'qs';
+import fetchWithRetry from 'fetch-retry';
 
 const actions = {
   fetchRepositories({ commit }, { authToken }) {
@@ -48,7 +49,26 @@ const actions = {
       },
     })
       .then(res => res.json())
+      .then(({ path }) => fetchWithRetry(path, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        retryDelay: 5000,
+        retryOn: (attempt, error, response) => {
+          if (attempt > 20) {
+            return false;
+          }
+
+          if (response.status < 300) {
+            return false;
+          }
+
+          return true;
+        },
+      }))
+      .then(res => res.json())
       .then((results) => {
+
         commit('setAnalyzingRepository', {
           user,
           repo,

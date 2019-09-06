@@ -11,6 +11,7 @@
     "@auth0/auth0-spa-js": "^1.2.3",
     "core-js": "^3.2.1",
     "date-fns": "^2.0.1",
+    "fetch-retry": "^2.2.3",
     "qs": "^6.8.0",
     "vue": "^2.6.10",
     "vue-kawaii": "^0.1.2",
