@@ -68,7 +68,6 @@ const actions = {
       }))
       .then(res => res.json())
       .then((results) => {
-
         commit('setAnalyzingRepository', {
           user,
           repo,
