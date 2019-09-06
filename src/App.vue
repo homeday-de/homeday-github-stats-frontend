@@ -4,7 +4,7 @@
       <v-toolbar-title class="headline text-uppercase d-flex align-center">
         <v-img
           class="d-inline-flex mr-3"
-          src="/homeday-github-stats-logo.png"
+          src="/homeday-github.png"
           aspect-ratio="1"
           max-height="38"
           width="38"
